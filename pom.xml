@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- groupId — change as appropriate -->
+    <groupId>me.nlz.example</groupId>
+    <artifactId>example-app</artifactId>
+    <version>0.0.1</version>
+    <packaging>jar</packaging>
+    <name>example-app</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <encoding>UTF-8</encoding>
+        <scala.version>2.10.4</scala.version>
+    </properties>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <!-- The standard scala plugin for maven, I think. -->
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.1.5</version>
+                </plugin>
+                <plugin>
+                    <!-- Is this actually needed? TODO: Find out. -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.0.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+              <!-- Provides easy_install magic.  -->
+      				<groupId>net.sf.mavenjython</groupId>
+      				<artifactId>jython-compile-maven-plugin</artifactId>
+      				<version>1.4</version>
+      				<executions>
+      					<execution>
+                  <!-- NB: the example on mavenjython.sf.net put this in the packaging -->
+                  <!-- phase, which seemed not to produce correctly-build JARs. -->
+      						<phase>compile</phase>
+      						<goals>
+      							<goal>jython</goal>
+      						</goals>
+      					</execution>
+      				</executions>
+      				<configuration>
+                <!-- A list of external dependences to install from PyPI, in easy_install  -->
+                <!-- syntax. The less said about Python package management, the happier we'll all be. -->
+      					<libraries>
+      						<param>six</param>
+                  <param>isodate==0.5.4</param>
+                  <param>pytz==2016.4</param>
+      					</libraries>
+      				</configuration>
+      			</plugin>
+            <!-- Taken directly from the scala-maven-plugin page -->
+            <!-- http://davidb.github.io/scala-maven-plugin/example_java.html -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Ganked from  -->
+            <!-- http://ryancompton.net/2014/05/19/sample-pomxml-to-build-scala-\-jar-with-dependenciesjar/ -->
+            <!-- (And note I had to break the above URL to make it a valid XML comment) -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.4</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                      <manifest>
+                        <mainClass>me.nlz.example.App</mainClass>
+                        <addClasspath>true</addClasspath>
+                      </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-compiler</artifactId>
+          <version>${scala.version}</version>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+    			<groupId>org.python</groupId>
+    			<artifactId>jython-standalone</artifactId>
+          <!-- I don't believe I had any reason to use a beta version of 2.7.1b3, but -->
+          <!-- am leaving it now because I haven't tested 2.7.0 -->
+    			<version>2.7.1b3</version>
+    		</dependency>
+    </dependencies>
+</project>

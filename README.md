@@ -26,5 +26,5 @@ satisfaction. Then I remembered that modern JVMs come with a JS interpreter buil
 - Python modules you wrote yourself can be dropped into `src/main/resources/python/Lib/`.
 
 # What doesn't work
-- Anything that requires CPython will of course not work with Jython. This means no numpy, and nothing that depends on numpy. [JyNI](http://jyni.org/) exists; I haven't tried it; for our case, using straight Jython is a feature, not a bug.
-- Right now, everything is straight JavaScript: we're just reading files and feeding them into the interpreter. NPM isn't going to work; `require` won't either. Sorry, but I'm not really a JavaScript person, and this was all I needed for this project.
+- Anything that requires CPython will of course not work with Jython. This means no numpy, and nothing that depends on numpy. [JyNI](http://jyni.org/) exists. I haven't tried it; for our case, using straight Jython is a feature, not a bug.
+- Right now, everything is straight JavaScript, not Node.JS: we're just reading files and feeding them into the interpreter. NPM isn't going to work; `require` won't either. Sorry, but I'm not really a JavaScript person, and this was all I needed for this project.
