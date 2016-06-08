@@ -14,7 +14,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <encoding>UTF-8</encoding>
-        <scala.version>2.10.4</scala.version>
+        <scala.version>2.11.8</scala.version>
     </properties>
     <build>
         <pluginManagement>
@@ -23,13 +23,13 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     <!-- The standard scala plugin for maven, I think. -->
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <version>3.1.5</version>
+                    <version>3.2.2</version>
                 </plugin>
                 <plugin>
                     <!-- Is this actually needed? TODO: Find out. -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.0.2</version>
+                    <version>3.5.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -88,7 +88,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <!-- (And note I had to break the above URL to make it a valid XML comment) -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.5.4</version>
+                <version>2.6</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
