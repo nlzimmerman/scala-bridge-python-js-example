@@ -53,6 +53,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <!-- A list of external dependences to install from PyPI, in easy_install  -->
                 <!-- syntax. The less said about Python package management, the happier we'll all be. -->
       					<libraries>
+                  <param>future==0.15.2</param>
       						<param>six</param>
                   <param>isodate==0.5.4</param>
                   <param>pytz==2016.4</param>
@@ -114,6 +115,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>1.6.1</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-compiler</artifactId>

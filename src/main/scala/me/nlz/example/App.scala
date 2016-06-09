@@ -4,55 +4,54 @@ import scala.collection.JavaConversions._
 
 import java.util.Properties;
 import java.io.InputStream;
-
 import java.time.LocalDateTime;
 import java.time.Duration
 
 //Python
 import org.python.core.Py;
-//import org.python.core.PyFile;
-//import org.python.core.PySystemState;
 import org.python.core.imp;
-//import org.python.util.InteractiveInterpreter;
 import org.python.util.PythonInterpreter;
 import org.python.core.PyObject;
 import org.python.core.PyCode;
-
-//import org.python.modules.time.PyTimeTuple
 
 //JS
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.Invocable;
 
+//spark
+import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.rdd.RDD
+
 /**
- * @author ${user.name}
+ * @author Neil L Zimmerman
  */
 
 object PythonRunner {
-  //val p = new InteractiveInterpreter()
-  val props: Properties = new Properties();
-  //props.setProperty("python.path", getClass.getResource("/python/").toURI().toString())
-  getClass.getResource("/python/").toURI().toString()
+  /* path to append to the PythonPath, relative to src/main/resources
+   * This should be modified to fit your purposes.
+   */
+  val localModulePath: String = "/python/Lib"
+
   val p = new PythonInterpreter()
   // copy-pasted without researching what it was for.
-  Py.getSystemState().__setattr__("_jy_interpreter", Py.java2py(p));
+  Py.getSystemState().__setattr__("_jy_interpreter", Py.java2py(p))
   /* This may not be the right way to set the Python system path.
    * It does work for me.
-   */
-  // path to append to the string, relative to src/main/resources
-  val libraryPath: String = "/python/Lib"
-  /* This gets the real, absolute path of the JAR, as a URI, formatted string,
+   * This gets the real, absolute path of the JAR, as a URI-formatted string,
    * i.e. file:/home/user/path.jar
    * .getLocation would return a URI
    */
-  val jarPathURIString: String = getClass.getProtectionDomain().getCodeSource().getLocation().toString()
-  /* This splits on the ':' character and returns the second half.
-   */
+  val jarPathURIString: String = getClass.
+                                   getProtectionDomain.
+                                   getCodeSource.
+                                   getLocation.
+                                   toString
+  // This splits on the ':' character and returns the second half.
   val javaPathString: String = jarPathURIString.split(":")(1)
-  /* Now that we have a full path string, let's add it to the Python Path
+  /* Now that we have a full path string, we add it to the Python Path
    */
-  Py.getSystemState().path.append(Py.java2py(javaPathString ++ libraryPath))
+  Py.getSystemState.path.append(Py.java2py(javaPathString ++ localModulePath))
   imp.load("site");
   // we are reading the file into a string
   val stream : InputStream = getClass.getResourceAsStream("/python/test.py")
@@ -119,31 +118,15 @@ object JSRunner {
 object App {
 
   def plusSixteen(x: Int): Int = {
-    JSRunner.plusSix(
-      ScalaRunner.minusOne(
-        PythonRunner.plusTwo(
-          JSRunner.plusSix(
-            JavaRunner.plusOne(
-              PythonRunner.plusTwo(
-                x
-              )
-            )
-          )
-        )
-      )
-    )
+    JSRunner.plusSix(ScalaRunner.minusOne(PythonRunner.plusTwo(JSRunner.plusSix(
+            JavaRunner.plusOne(PythonRunner.plusTwo(x))
+          ))))
   }
   def main(args : Array[String]) {
     println( "Hello World!" )
-    //println("concat arguments = " + foo(args))
-    println(ScalaRunner.minusOne(7))
-    println(JavaRunner.plusOne(3))
-    println(PythonRunner.plusTwo(4))
-    println(PythonRunner.plusTwo(6))
-    println(JSRunner.plusSix(6))
-    println(plusSixteen(-1))
-    println(PythonRunner.rightNow())
-    println(PythonRunner.parseDuration("PT5M30S"))
-    println(PythonRunner.moduleTest())
+    val conf = new SparkConf().setAppName("Toy Application")
+    val sc = new SparkContext(conf)
+    val x: RDD[Int] = sc.parallelize(0 to 10000, 100)
+    println(x.map(plusSixteen).collect().toList)
   }
 }
