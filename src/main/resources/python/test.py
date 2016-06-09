@@ -23,8 +23,7 @@ from six import next
 # 2. byte-arrays must always be declared with a b''.
 # 3. use decode and encode to go from bytes to strings and strings to bytes
 # 4. Classes must always inherit from _something_, usually object.
-# 5. Don't use urllib
-# 6. Type-checking:
+# 5. Type-checking stinks, but there's nothing we can do about it:
 #    string: type(x) is six.text_type
 #    bytes:  type(x) is six.binary_type
 #    int:    isinstance(x, six.integer_types)
